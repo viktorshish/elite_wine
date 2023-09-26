@@ -47,8 +47,13 @@ def get_drinks(file_path):
 
 
 @click.command()
-@click.option('--file_path', '-p', default='wine.xlsx',
-              help='Specify file path and name file')
+@click.option(
+    '--file_path',
+    '-p',
+    type=click.Path(exists=True),
+    default='wine.xlsx',
+    help='Specify file path and name file'
+)
 def main(file_path):
     env = Environment(
         loader=FileSystemLoader('.'),
