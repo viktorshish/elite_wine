@@ -2,6 +2,7 @@ from collections import defaultdict
 import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
+import click
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import pandas
 
@@ -34,9 +35,9 @@ def grouping_of_products(drinks):
     return sorted_grouped_products
 
 
-def get_drinks():
+def get_drinks(path):
     excel_data = pandas.read_excel(
-        'wine.xlsx',
+        path,
         na_values='nan',
         keep_default_na=False
     )
@@ -45,7 +46,9 @@ def get_drinks():
     return drinks
 
 
-def main():
+@click.command()
+@click.argument('path')
+def main(path):
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -56,7 +59,7 @@ def main():
     rendered_page = template.render(
         delta_year=get_delta_year(),
         year_declension=get_year_declension(get_delta_year()),
-        wines=grouping_of_products(get_drinks())
+        wines=grouping_of_products(get_drinks(path))
         )
 
     with open('index.html', 'w', encoding="utf8") as file:
