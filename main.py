@@ -35,9 +35,9 @@ def grouping_of_products(drinks):
     return sorted_grouped_products
 
 
-def get_drinks(path):
+def get_drinks(file_path):
     excel_data = pandas.read_excel(
-        path,
+        file_path,
         na_values='nan',
         keep_default_na=False
     )
@@ -47,8 +47,9 @@ def get_drinks(path):
 
 
 @click.command()
-@click.argument('path')
-def main(path):
+@click.option('--file_path', '-p', default='wine.xlsx',
+              help='Specify file path and name file')
+def main(file_path):
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -59,7 +60,7 @@ def main(path):
     rendered_page = template.render(
         delta_year=get_delta_year(),
         year_declension=get_year_declension(get_delta_year()),
-        wines=grouping_of_products(get_drinks(path))
+        wines=grouping_of_products(get_drinks(file_path))
         )
 
     with open('index.html', 'w', encoding="utf8") as file:

@@ -1,4 +1,4 @@
 env/
 .vscode/
-.xlsx
+*.xlsx
 .DS_Store
